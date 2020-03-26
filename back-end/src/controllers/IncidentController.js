@@ -16,7 +16,7 @@ async index (request, response){
   
   //Listar
   const incidents = await connection('incidents')
-  .join('ongs', 'ongs.id', '=', 'incidents.ongs_id')  //relacionar dados de 2 tables
+  .join('ongs', 'ongs.id', '=', 'incidents.ong_id')  //relacionar dados de 2 tables
   .limit(5)                 //paginação 5 por page
   .offset((page - 1)* 5)    //paginação 5 por page
   .select(['incidents.*',
@@ -24,7 +24,7 @@ async index (request, response){
            'ongs.email',
            'ongs.whatsapp',
            'ongs.city',
-            'ongs.uf' 
+           'ongs.uf' 
           ]);
   return response.json(incidents);
 
@@ -35,13 +35,13 @@ async create (request, response){
   const { title, description, value } = request.body;
 
   //"Authorization" because Insomnia, this is the name in header
-  const ongs_id = request.headers.authorization;
+  const ong_id = request.headers.authorization;
 
   const [id]= await connection('incidents').insert({
     title,
     description,
     value,
-    ongs_id,
+    ong_id,
   });
   return response.json({ id });
   },
@@ -52,16 +52,16 @@ async create (request, response){
     const { id } = request.params;
     
     //confirmar se a ong que está deletando
-    const ongs_id = request.headers.authorization;
+    const ong_id = request.headers.authorization;
 
     //buscar o incidents dentro do db
     const incidents = await connection('incidents')
     .where('id', id)
-    .select('ongs_id')
+    .select('ong_id')
     .first(); //retorna apenas um resultado
 
     //verificação da ong logada
-    if(incidents.ongs_id !== ongs_id){
+    if(incidents.ong_id !== ong_id){
       return response.status(401).json({ error: 'Operation not permitted.'});
     }
     await connection('incidents').where('id', id).delete();
