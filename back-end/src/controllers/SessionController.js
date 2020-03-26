@@ -9,11 +9,11 @@ module.exports={
     .where('id', id)
     .select('name')
     .first(); //retorna apenas um valor
-
+  
     if(!ong){
       //status bad request (400)
       return response.status(400).json({error:'No ONG found with this ID' });
     }
     return response.json(ong);
   }
-};
+};  

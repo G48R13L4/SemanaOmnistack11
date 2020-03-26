@@ -7,7 +7,7 @@ async index (request, response){
   //buscar 
   const{ page = 1 }=request.query;
 
-  //query para o total de casos, contagem de casos
+  //query para o total de casos, contagem de casos 
   const [count] = await connection('incidents')
   .count();
 
